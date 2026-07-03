@@ -1,0 +1,24 @@
+# Maven
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Segredos e variaveis de ambiente - NUNCA subir pro Git
+.env
+.env.*.local
+!.env.example

@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: showpass-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-showpass}
+      POSTGRES_USER: ${POSTGRES_USER:-showpass_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-showpass_local_pw}
+    ports:
+      - "5433:5432"
+    volumes:
+      - showpass_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: showpass-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  showpass_postgres_data:
