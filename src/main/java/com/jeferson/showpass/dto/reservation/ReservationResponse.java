@@ -8,6 +8,7 @@ public record ReservationResponse(
         Long id,
         Long ticketId,
         String ticketType,
+        Long eventId,
         ReservationStatus status,
         LocalDateTime createdAt
 ) {
