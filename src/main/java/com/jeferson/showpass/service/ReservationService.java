@@ -36,6 +36,7 @@ public class ReservationService {
             throw new TicketSoldOutException(ticket.getId());
         }
 
+
         ticket.setAvailableQuantity(ticket.getAvailableQuantity() - 1);
         ticketRepository.save(ticket);
 
@@ -47,12 +48,6 @@ public class ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
 
-        return new ReservationResponse(
-                saved.getId(),
-                ticket.getId(),
-                ticket.getType(),
-                saved.getStatus(),
-                saved.getCreatedAt()
-        );
+        return ReservationResponse.fromEntity(saved);
     }
 }
