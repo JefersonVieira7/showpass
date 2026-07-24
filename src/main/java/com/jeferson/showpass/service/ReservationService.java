@@ -12,6 +12,7 @@ import com.jeferson.showpass.repository.ReservationRepository;
 import com.jeferson.showpass.repository.TicketRepository;
 import com.jeferson.showpass.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class ReservationService {
     private final UserRepository userRepository;
 
     @Transactional(propagation = Propagation.REQUIRED)
+    @CacheEvict(value = "availability", key = "#result.eventId()")
     public ReservationResponse create(String userEmail, ReservationRequest request) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userEmail));
@@ -35,7 +37,6 @@ public class ReservationService {
         if (ticket.getAvailableQuantity() <= 0) {
             throw new TicketSoldOutException(ticket.getId());
         }
-
 
         ticket.setAvailableQuantity(ticket.getAvailableQuantity() - 1);
         ticketRepository.save(ticket);

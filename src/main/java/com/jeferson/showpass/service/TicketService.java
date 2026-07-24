@@ -8,6 +8,7 @@ import com.jeferson.showpass.dto.ticket.TicketResponse;
 import com.jeferson.showpass.mapper.TicketMapper;
 import com.jeferson.showpass.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ public class TicketService {
 
     @Transactional
     public TicketResponse create(Long eventId, TicketRequest request) {
-        Event event = eventService.findEventOrThrow(eventId);
+        Event event = eventService.findEventOrThrow(eventId );
 
         Ticket ticket = Ticket.builder()
                 .event(event)
@@ -38,6 +39,7 @@ public class TicketService {
         return ticketMapper.toResponse(saved);
     }
 
+    @Cacheable(value = "availability", key = "#eventId")
     public EventAvailabilityResponse getAvailability(Long eventId) {
         Event event = eventService.findEventOrThrow(eventId);
 
