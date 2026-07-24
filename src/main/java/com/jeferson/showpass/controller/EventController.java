@@ -9,6 +9,7 @@ import com.jeferson.showpass.service.EventService;
 import com.jeferson.showpass.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
@@ -53,6 +55,10 @@ public class EventController {
 
     @GetMapping("/{id}/availability")
     public ResponseEntity<EventAvailabilityResponse> availability(@PathVariable Long id) {
-        return ResponseEntity.ok(ticketService.getAvailability(id));
+        long start = System.currentTimeMillis();
+        EventAvailabilityResponse response = ticketService.getAvailability(id);
+        long elapsedMs = System.currentTimeMillis() - start;
+        log.info("GET /events/{}/availability resolved in {} ms", id, elapsedMs);
+        return ResponseEntity.ok(response);
     }
 }
